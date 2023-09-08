@@ -4,9 +4,7 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Entity
 public class Produto implements Serializable {
@@ -27,6 +25,10 @@ public class Produto implements Serializable {
     )
     private List<Categoria> categorias = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "id.produto")
+    private Set<ItemPedido> itens = new HashSet<>();
+
     public Produto() {
 
     }
@@ -36,6 +38,17 @@ public class Produto implements Serializable {
         this.nome = nome;
         this.preco = preco;
     }
+
+    public List<Pedido> getPedidos(){
+        List<Pedido> pedidos = new ArrayList<>();
+
+        for (ItemPedido item : itens) {
+            pedidos.add(item.getPedido());
+        }
+
+        return pedidos;
+    }
+
 
     public Integer getId() {
         return id;
@@ -67,6 +80,14 @@ public class Produto implements Serializable {
 
     public void setCategorias(List<Categoria> categorias) {
         this.categorias = categorias;
+    }
+
+    public Set<ItemPedido> getItens() {
+        return itens;
+    }
+
+    public void setItens(Set<ItemPedido> itens) {
+        this.itens = itens;
     }
 
     @Override
